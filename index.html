@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Management System - Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body.light-mode {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .logo-container { text-align: center; margin-bottom: 30px; }
+    .logo-title { font-size: 2.2rem; color: #2c3e50; margin-bottom: 8px; }
+
+    .login-card {
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      background-color: #fafafa;
+    }
+
+    .input-icon { margin-right: 8px; font-size: 1.1rem; color: #888; }
+    .form-control {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .login-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .remember-me input { margin-right: 5px; }
+
+    .login-button {
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+
+    .login-button:hover { background-color: #2e86c1; }
+
+    .back-button {
+      background-color: #bdc3c7;
+      color: #333;
+    }
+
+    .back-button:hover { background-color: #a6acaf; }
+
+    .footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.85rem;
+      background-color: #f0f0f0;
+      color: #777;
+      margin-top: auto;
+    }
+
+    .role-selection {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .role-button {
+      padding: 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #2980b9;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .role-button:hover {
+      background-color: #21618c;
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <main class="login-container">
+    <div class="logo-container">
+      <h1 class="logo-title">Student Management System</h1>
+      <p>Login Portal</p>
+    </div>
+
+    <div class="login-card">
+      <!-- Step 0: Role Selection -->
+      <div id="role-selection">
+        <div class="login-header">
+          <h2>Select Your Role</h2>
+        </div>
+        <div class="role-selection">
+          <button class="role-button" onclick="selectRole('student')">Student</button>
+          <button class="role-button" onclick="selectRole('teacher')">Teacher</button>
+          <button class="role-button" onclick="selectRole('hod')">HOD</button>
+          <button class="role-button" onclick="selectRole('principal')">Principal</button>
+          <button class="role-button" onclick="selectRole('parent')">Parent</button>
+        </div>
+      </div>
+
+      <!-- Step 1: Password Entry -->
+      <form id="password-form" style="display: none;">
+        <div class="login-header">
+          <h2>Welcome</h2>
+          <p id="role-display"></p>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required />
+          </div>
+        </div>
+        <div class="login-options">
+          <label class="remember-me">
+            <input type="checkbox" id="remember" />
+            Remember me
+          </label>
+          <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+        <button type="submit" class="login-button">Login</button>
+        <button type="button" id="back-to-role" class="login-button back-button">Back</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2025 Student Management System. All rights reserved.
+  </footer>
+
+  <script>
+    const rolePasswords = {
+      "student": "student123",
+      "teacher": "teacher123",
+      "hod": "hod123",
+      "principal": "principal123",
+      "parent": "parent123"
+    };
+
+    const roleRedirects = {
+      "student": "student.html",
+      "teacher": "teacher.html",
+      "hod": "hod.html",
+      "principal": "principal.html",
+      "parent": "parent.html"
+    };
+
+    const roleDisplayNames = {
+      "student": "Student",
+      "teacher": "Teacher",
+      "hod": "Head of Department",
+      "principal": "Principal",
+      "parent": "Parent"
+    };
+
+    let currentRole = "";
+
+    function selectRole(role) {
+      currentRole = role;
+      document.getElementById("role-selection").style.display = "none";
+      document.getElementById("password-form").style.display = "block";
+      document.getElementById("role-display").textContent = `Sign in as ${roleDisplayNames[role]}`;
+    }
+
+    document.getElementById("password-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const password = document.getElementById("password").value;
+      if (password === rolePasswords[currentRole]) {
+        window.location.href = roleRedirects[currentRole];
+      } else {
+        alert("Invalid password! Please try again.");
+      }
+    });
+
+    document.getElementById("back-to-role").addEventListener("click", function () {
+      document.getElementById("password-form").reset();
+      document.getElementById("password-form").style.display = "none";
+      document.getElementById("role-selection").style.display = "block";
+    });
+    
+  </script>
+</body>
+</html>

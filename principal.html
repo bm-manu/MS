@@ -1,0 +1,3896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--text-color);
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 0;
+            overflow-y: auto;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h2 {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item:hover {
+            background-color: #2392d3;
+        }
+        
+        .menu-item.active {
+            background-color: var(--primary-color);
+        }
+        
+        .menu-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            padding: 0;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .college-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .college-logo img {
+            height: 80px;
+            margin-right: 15px;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            margin-right: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-right: 25px;
+        }
+        
+        .user-name {
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .content-area {
+            padding: 25px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .dashboard-heading {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .dashboard-subheading {
+            color: var(--text-color);
+            margin-bottom: 25px;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-header h3 {
+            color: var(--dark-color);
+            font-size: 1.2rem;
+        }
+        
+        .card-header i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .card-body {
+            color: #666;
+        }
+        
+        .list-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .date-label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .status-label {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .status-approved {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-in-progress {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(74, 111, 165, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: var(--primary-color);
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a252f;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.875rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }departmen
+        
+        .badge-secondary {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .badge-warning {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .progress-container {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            background-color: var(--primary-color);
+            transition: width 0.5s;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 25px 15px;
+        }
+        
+        .stats-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .stats-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .department-card {
+            margin-bottom: 25px;
+        }
+        
+        .department-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .department-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+        }
+        
+        .department-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .metric-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .metric-item h4 {
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .metric-item p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .search-container {
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+        }
+        
+        .student-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .student-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .student-section h3 {
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .detail-value {
+            color: #666;
+        }
+        
+        
+        .announcement-form {
+            margin-top: 25px;
+        }
+        /* Gallery Section Styling */
+#gallery {
+    padding: 30px;
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+#gallery h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#gallery p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Gallery Grid */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.05);
+}
+
+/* Add Button */
+.btn.btn-primary {
+    background-color: #2392d3;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+    background-color: #2392d3;
+}
+
+/* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #444;
+}
+
+.modal-content input[type="file"],
+.modal-content input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        margin: 20% auto;
+    }
+}
+
+
+        
+        .query-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .query-title {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .query-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .query-body {
+            margin-bottom: 10px;
+        }
+        
+        .query-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        @media (max-width: 992px) {
+            .card-grid, .department-metrics, .student-details, .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+                position: fixed;
+                width: 280px;
+                z-index: 1000;
+                height: 100%;
+            }
+            
+            .sidebar.active {
+                display: block;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .mobile-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: var(--dark-color);
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-right: 15px;
+            }
+            
+            .content-area {
+                padding: 15px;
+            }
+            
+            .card-grid, .department-metrics, .student-details, .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .college-logo span {
+                display: none;
+            }
+            
+            .user-name {
+                display: none;
+            }
+        }
+        /* Calendar Styles */
+#calendar-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+#calendar {
+    max-width: 100%;
+    margin: 0 auto;
+    height: 600px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.fc-header-toolbar {
+    padding: 10px;
+    background-color: var(--light-color);
+    border-radius: 4px;
+    margin-bottom: 10px !important;
+}
+
+.fc-toolbar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.fc-button {
+    background-color: var(--primary-color) !important;
+    border: none !important;
+    color: white !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+}
+
+.fc-button:hover {
+    background-color: #1a252f !important;
+}
+
+.fc-daygrid-day-number, .fc-col-header-cell-cushion {
+    color: var(--dark-color);
+    text-decoration: none !important;
+}
+
+.fc-day-today {
+    background-color: rgba(52, 152, 219, 0.1) !important;
+}
+
+.fc-event {
+    cursor: pointer;
+    border: none !important;
+    padding: 3px 6px !important;
+}
+
+.fc-event:hover {
+    opacity: 0.9;
+}
+
+.fc-event-title {
+    font-weight: 500;
+}
+.college-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--dark-color);
+    text-transform: uppercase;
+}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Principal Dashboard</h2>
+                <p>Welcome, Dr. Robert Chen</p>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" onclick="showTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard Overview</span>
+                </div>
+                <div class="menu-item" onclick="showTab('announcements')">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Special Announcements</span>
+                </div>
+                <div class="menu-item" onclick="showTab('events')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Upcoming Events</span>
+                </div>
+                <div class="menu-item" onclick="showTab('coe')">
+                    <i class="fas fa-university"></i>
+                    <span>COE Management</span>
+                </div>
+                <div class="menu-item" onclick="showTab('departments')">
+                    <i class="fas fa-building"></i>
+                    <span>Department Metrics</span>
+                </div>
+                <div class="menu-item" onclick="showTab('research')">
+                    <i class="fas fa-flask"></i>
+                    <span>Institute R&D</span>
+                </div>
+                <div class="menu-item" onclick="showTab('student-search')">
+                    <i class="fas fa-search"></i>
+                    <span>Student Search</span>
+                </div>
+                <div class="menu-item" onclick="showTab('policies')">
+                    <i class="fas fa-book"></i>
+                    <span>Rule Book & Policies</span>
+                </div>
+                <div class="menu-item" onclick="showTab('circulars')">
+                    <i class="fas fa-envelope"></i>
+                    <span>Circulars & Notices</span>
+                </div>
+                <div class="menu-item" onclick="showTab('queries')">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Queries & Support</span>
+                </div>
+                <div class="menu-item" onclick="showTab('gallery')">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery</span>
+                </div>
+                <div class="menu-item" onclick="showTab('newsletters')">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Newsletters</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <div class="header">
+                <div class="college-logo">
+                    <img src="pes.png" alt="College Logo">
+                    <span class="college-title">PESITM COLLEGE OF ENGINEERING</span>
+                </div>
+                <div class="user-actions">
+
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <h1 class="dashboard-heading">Principal Dashboard</h1>
+                    <p class="dashboard-subheading">Comprehensive overview of institute performance and activities</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="card-grid">
+                        <div class="card stats-card">
+                            <i class="fas fa-users" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <div class="stats-value">1,856</div>
+                            <div class="stats-label">Total Students</div>
+                        </div>
+                        
+                        <div class="card stats-card">
+                            <i class="fas fa-chalkboard-teacher" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <div class="stats-value">124</div>
+                            <div class="stats-label">Faculty Members</div>
+                        </div>
+                        
+                        <div class="card stats-card">
+                            <i class="fas fa-building" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <div class="stats-value">8</div>
+                            <div class="stats-label">Departments</div>
+                        </div>
+                        
+                        <div class="card stats-card">
+                            <i class="fas fa-graduation-cap" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <div class="stats-value">92%</div>
+                            <div class="stats-label">Placement Rate</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Institute Performance -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Institute Performance Overview</h3>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="instituteChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Announcements -->
+                    <div class="card" style="margin-top: 25px;">
+                        <div class="card-header">
+                            <h3>Recent Announcements</h3>
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-item">
+                                <span class="date-label">Oct 15, 2024</span>
+                                <span>Semester Exam Schedule Released</span>
+                                <span class="status-label status-approved">Published</span>
+                            </div>
+                            <div class="list-item">
+                                <span class="date-label">Oct 10, 2024</span>
+                                <span>Annual Sports Meet Announcement</span>
+                                <span class="status-label status-pending">Draft</span>
+                            </div>
+                            <div class="list-item">
+                                <span class="date-label">Oct 05, 2024</span>
+                                <span>Faculty Development Program</span>
+                                <span class="status-label status-approved">Published</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Announcements Tab -->
+                <div id="announcements" class="tab-content">
+                    <h1 class="dashboard-heading">Special Announcements</h1>
+                    <p class="dashboard-subheading">Manage and publish institute-wide announcements</p>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Create New Announcement</h3>
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="card-body">
+                            <form class="announcement-form">
+                                <div class="form-group">
+                                    <label for="announcement-title">Title</label>
+                                    <input type="text" id="announcement-title" class="form-control" placeholder="Enter announcement title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="announcement-content">Content</label>
+                                    <textarea id="announcement-content" class="form-control" placeholder="Enter announcement details"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="announcement-date">Publication Date</label>
+                                    <input type="date" id="announcement-date" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Publish Announcement</button>
+                                <button type="button" class="btn btn-secondary">Save as Draft</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 25px;">
+                        <div class="card-header">
+                            <h3>Announcement History</h3>
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Semester Exam Schedule</td>
+                                            <td>Oct 15, 2024</td>
+                                            <td><span class="badge badge-success">Published</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Annual Sports Meet</td>
+                                            <td>Oct 10, 2024</td>
+                                            <td><span class="badge badge-warning">Draft</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Tab -->
+                
+<div id="events" class="tab-content">
+    <h1 class="dashboard-heading">Upcoming Events</h1>
+    <p class="dashboard-subheading">View and manage institute events</p>
+    
+    <div class="card">
+        <div class="card-header">
+            
+            <h3>Event Management</h3>
+            <i class="fas fa-plus-circle"></i>
+        </div>
+        <div class="card-body">
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Event Title</label>
+                    <input type="text" id="eventTitle" class="form-control" placeholder="Enter event title" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventStart">Start Date & Time</label>
+                    <input type="datetime-local" id="eventStart" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventEnd">End Date & Time</label>
+                    <input type="datetime-local" id="eventEnd" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Description</label>
+                    <textarea id="eventDescription" class="form-control" placeholder="Enter event details"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventColor">Event Color</label>
+                    <select id="eventColor" class="form-control">
+                        <option value="#3498db">Blue</option>
+                        <option value="#2ecc71">Green</option>
+                        <option value="#e74c3c">Red</option>
+                        <option value="#f39c12">Orange</option>
+                        <option value="#9b59b6">Purple</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Event</button>
+                <button type="button" id="clearForm" class="btn btn-secondary">Clear Form</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 25px;">
+        <div class="card-header">
+            <h3>Upcoming Events List</h3>
+            <i class="fas fa-list"></i>
+        </div>
+        <div class="card-body">
+            <div id="eventsList"></div>
+        </div>
+    </div>
+</div>
+
+
+
+                <!-- COE Management Tab -->
+                <div id="coe" class="tab-content">
+                    <h1 class="dashboard-heading">COE Management</h1>
+                    <p class="dashboard-subheading">Controller of Examinations dashboard</p>
+                    
+                    <!-- Button to open the "Add Exam" form -->
+                    <button class="btn btn-primary" onclick="openAddExamForm()">Add New Exam</button>
+                
+                    <!-- Form to Add New Exam -->
+                    <div id="add-exam-form" style="display:none; margin-top: 20px;">
+                        <h3>Add New Exam</h3>
+                        <form id="exam-form">
+                            <div>
+                                <label for="exam-name">Exam Name:</label>
+                                <input type="text" id="exam-name" required>
+                            </div>
+                            <div>
+                                <label for="exam-date">Date:</label>
+                                <input type="date" id="exam-date" required>
+                            </div>
+                            <div>
+                                <label for="exam-department">Department:</label>
+                                <input type="text" id="exam-department" required>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Add Exam</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeAddExamForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                
+                    <!-- Exam Schedule Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Examination Schedule</h3>
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Exam Name</th>
+                                            <th>Date</th>
+                                            <th>Department</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="exam-schedule-table-body">
+                                        <!-- Dynamic data will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Department Metrics Tab -->
+                <div id="departments" class="tab-content">
+                    <h1 class="dashboard-heading">Department Metrics</h1>
+                    <p class="dashboard-subheading">Performance metrics by department</p>
+                
+                    <div class="tabs">
+                        <div class="tab active" onclick="showDepartmentTab('syllabus-coverage')">Syllabus Coverage</div>
+                        <div class="tab" onclick="showDepartmentTab('achievements')">Achievements</div>
+                        <div class="tab" onclick="showDepartmentTab('faculty-performance')">Faculty Performance</div>
+                        <div class="tab" onclick="showDepartmentTab('student-performance')">Student Performance</div>
+                    </div>
+                
+                    <div id="syllabus-coverage" class="tab-pane active">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Syllabus Coverage</h3>
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Department</th>
+                                                <th>Course</th>
+                                                <th>Coverage</th>
+                                                <th>Progress</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="syllabusTableBody">
+                                            <!-- Will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="achievements" class="tab-pane">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Department Achievements</h3>
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="card-body" id="achievementsList">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="faculty-performance" class="tab-pane">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Faculty Performance</h3>
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="facultyPerformanceChart"></canvas>
+                                </div>
+                                <div class="table-responsive" style="margin-top: 20px;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Faculty</th>
+                                                <th>Department</th>
+                                                <th>Performance Score</th>
+                                                <th>Rating</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="facultyTableBody">
+                                            <!-- Will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="student-performance" class="tab-pane">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Student Performance</h3>
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="studentPerformanceChart"></canvas>
+                                </div>
+                                <div class="department-metrics" style="margin-top: 20px;">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+
+                
+                <!-- Institute R&D Tab -->
+                <div id="research" class="tab-content">
+                    <h1 class="dashboard-heading">Institute R&D</h1>
+                    <p class="dashboard-subheading">Research and Development activities</p>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Research Projects</h3>
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Project Title</th>
+                                            <th>Department</th>
+                                            <th>Funding</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="research-projects-body">
+                                        <!-- Dynamic project data will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <!-- Student Search Tab -->
+               <!-- Student Search Tab -->
+<div id="student-search" class="tab-content">
+    <h1 class="dashboard-heading">Student Search</h1>
+    <p class="dashboard-subheading">Search and manage student records</p>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>Search Students</h3>
+            <i class="fas fa-search"></i>
+        </div>
+        <div class="card-body">
+            <div class="search-container">
+                <div class="search-box" style="margin-bottom: 20px;">
+                    <input type="text" id="studentSearchInput" class="form-control search-input" placeholder="Search by name, ID, department...">
+                    <button class="btn btn-primary" id="searchStudents">Search</button>
+                </div>
+                
+                <div class="filter-options" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label for="filterDepartment">Department</label>
+                        <select id="filterDepartment" class="form-control">
+                            <option value="">All Departments</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="mechanical">Mechanical Engineering</option>
+                            <option value="electrical">Electrical Engineering</option>
+                            <option value="civil">Civil Engineering</option>
+                            <option value="electronics">Electronics & Communication</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterYear">Academic Year</label>
+                        <select id="filterYear" class="form-control">
+                            <option value="">All Years</option>
+                            <option value="1">First Year</option>
+                            <option value="2">Second Year</option>
+                            <option value="3">Third Year</option>
+                            <option value="4">Fourth Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterStatus">Status</label>
+                        <select id="filterStatus" class="form-control">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="graduated">Graduated</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>CGPA</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Students will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="studentPagination" style="margin-top: 20px; display: flex; justify-content: center;">
+                <!-- Pagination will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Student Details Modal -->
+    <div id="studentModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: white; margin: 2% auto; padding: 25px; width: 90%; max-width: 900px; border-radius: 8px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="modalStudentName">Student Details</h2>
+                <span class="close-modal" style="cursor: pointer; font-size: 24px;">&times;</span>
+            </div>
+            
+            <div class="student-details-container" style="display: grid; grid-template-columns: 150px 1fr; gap: 20px;">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div id="studentAvatar" style="width: 120px; height: 120px; border-radius: 50%; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden;">
+                        <i class="fas fa-user-graduate" style="font-size: 50px; color: #666;"></i>
+                    </div>
+                    <div id="studentIdBadge" class="badge" style="margin-bottom: 15px; background-color: var(--primary-color); color: white;"></div>
+                    <div id="studentStatusBadge" class="badge"></div>
+                </div>
+                
+                <div>
+                    <div class="tabs" style="margin-bottom: 20px;">
+                        <div class="tab active" data-tab="personal">Personal</div>
+                        <div class="tab" data-tab="academic">Academic</div>
+                        <div class="tab" data-tab="attendance">Attendance</div>
+                        <div class="tab" data-tab="documents">Documents</div>
+                    </div>
+                    
+                    <div id="personalTab" class="tab-pane active">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <div class="form-control-static" id="studentFullName"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <div class="form-control-static" id="studentDob"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <div class="form-control-static" id="studentGender"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <div class="form-control-static" id="studentEmail"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <div class="form-control-static" id="studentPhone"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <div class="form-control-static" id="studentAddress"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="academicTab" class="tab-pane">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label>Department</label>
+                                <div class="form-control-static" id="studentDept"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Academic Year</label>
+                                <div class="form-control-static" id="studentYear"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Admission Date</label>
+                                <div class="form-control-static" id="studentAdmissionDate"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Current CGPA</label>
+                                <div class="form-control-static" id="studentCgpa"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Credits Completed</label>
+                                <div class="form-control-static" id="studentCredits"></div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin-bottom: 15px;">Semester Results</h4>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Semester</th>
+                                        <th>SGPA</th>
+                                        <th>Credits</th>
+                                        <th>Backlogs</th>
+                                        <th>Rank</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentResultsTable">
+                                    <!-- Results will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="attendanceTab" class="tab-pane">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label>Overall Attendance</label>
+                                <div class="form-control-static">
+                                    <div id="attendanceOverall" style="font-weight: bold;"></div>
+                                    <div class="progress-container" style="margin-top: 5px;">
+                                        <div class="progress-bar" id="attendanceProgress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Current Semester Attendance</label>
+                                <div class="form-control-static">
+                                    <div id="attendanceCurrent" style="font-weight: bold;"></div>
+                                    <div class="progress-container" style="margin-top: 5px;">
+                                        <div class="progress-bar" id="currentAttendanceProgress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin-bottom: 15px;">Subject-wise Attendance</h4>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Code</th>
+                                        <th>Classes Held</th>
+                                        <th>Classes Attended</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subjectAttendanceTable">
+                                    <!-- Attendance details will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div id="documentsTab" class="tab-pane">
+                        <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                            <!-- Documents will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-primary" id="printStudentProfile">Print Profile</button>
+                <button class="btn btn-secondary close-modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+                
+
+                <!-- Rule Book & Policies Tab -->
+                <div id="policies" class="tab-content">
+                    <h1 class="dashboard-heading">Rule Book & Policies</h1>
+                    <p class="dashboard-subheading">Access institute policies and guidelines</p>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Policy Documents</h3>
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="card-body">
+                            <!-- Existing Policies -->
+                            <div class="list-item">
+                                <span>Academic Integrity Policy</span>
+                                <a href="#" class="btn btn-sm btn-primary" download>Download</a>
+                                <button class="btn btn-sm btn-danger" onclick="removePolicy(this)">Remove</button>
+                            </div>
+                            <div class="list-item">
+                                <span>Examination Guidelines</span>
+                                <a href="#" class="btn btn-sm btn-primary" download>Download</a>
+                                <button class="btn btn-sm btn-danger" onclick="removePolicy(this)">Remove</button>
+                            </div>
+                            <div class="list-item">
+                                <span>Code of Conduct</span>
+                                <a href="#" class="btn btn-sm btn-primary" download>Download</a>
+                                <button class="btn btn-sm btn-danger" onclick="removePolicy(this)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Add New Policy Form -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h3>Add New Policy</h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="text" id="policy-name" placeholder="Policy Name" class="form-control mb-2">
+                            <input type="url" id="policy-link" placeholder="Download Link (URL)" class="form-control mb-2">
+                            <button class="btn btn-primary" onclick="addPolicy()">Add Policy</button>
+                        </div>
+                    </div>
+                </div>
+                
+
+
+                <!-- Circulars & Notices Tab -->
+                <div id="circulars" class="tab-content">
+                    <h1 class="dashboard-heading">Circulars & Notices</h1>
+                    <p class="dashboard-subheading">View and manage institute circulars</p>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Circulars</h3>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-item">
+                                <span class="date-label">Oct 20, 2024</span>
+                                <span>Holiday Notice</span>
+                                <a href="#" class="btn btn-sm btn-primary" onclick="return confirmView('Holiday Notice')">View</a>
+                            </div>
+                            <div class="list-item">
+                                <span class="date-label">Oct 18, 2024</span>
+                                <span>Fee Payment Reminder</span>
+                                <a href="#" class="btn btn-sm btn-primary" onclick="return confirmView('Fee Payment Reminder')">View</a>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Add Circular Form -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h3>Add New Circular</h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="date" id="new-date" placeholder="Enter date" class="form-control mb-2">
+                            <input type="text" id="new-title" placeholder="Enter circular title" class="form-control mb-2">
+                            <button class="btn btn-primary" onclick="addCircular()">Add Circular</button>
+                        </div>
+                    </div>
+                </div>
+                
+
+
+                <!-- Queries & Support Tab -->
+                 <!-- Queries & Support Tab -->
+<div id="queries" class="tab-content">
+    <h1 class="dashboard-heading">Queries & Support</h1>
+    <p class="dashboard-subheading">Manage queries from students and faculty</p>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>Submit New Query</h3>
+            <i class="fas fa-question-circle"></i>
+        </div>
+        <div class="card-body">
+            <form id="queryForm">
+                <div class="form-group">
+                    <label for="queryTitle">Title</label>
+                    <input type="text" id="queryTitle" class="form-control" placeholder="Brief description of your query" required>
+                </div>
+                <div class="form-group">
+                    <label for="queryCategory">Category</label>
+                    <select id="queryCategory" class="form-control" required>
+                        <option value="">Select a category</option>
+                        <option value="academic">Academic</option>
+                        <option value="administrative">Administrative</option>
+                        <option value="faculty">Faculty Related</option>
+                        <option value="facilities">Facilities</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="queryPriority">Priority</label>
+                    <select id="queryPriority" class="form-control" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="queryDescription">Detailed Description</label>
+                    <textarea id="queryDescription" class="form-control" rows="4" placeholder="Please provide detailed information about your query" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="queryAttachment">Attachment (Optional)</label>
+                    <input type="file" id="queryAttachment" class="form-control">
+                    <small class="text-muted">You can attach supporting documents (max 5MB)</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Query</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 25px;">
+        <div class="card-header">
+            <h3>Query Management</h3>
+            <i class="fas fa-tasks"></i>
+        </div>
+        <div class="card-body">
+            <div class="query-filters">
+                <div class="search-box" style="margin-bottom: 15px;">
+                    <input type="text" id="querySearch" class="form-control search-input" placeholder="Search queries...">
+                    <button class="btn btn-primary" id="searchQueries">Search</button>
+                </div>
+                <div class="filter-options" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <select id="filterStatus" class="form-control" style="flex: 1;">
+                        <option value="all">All Statuses</option>
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                    <select id="filterPriority" class="form-control" style="flex: 1;">
+                        <option value="all">All Priorities</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                    <select id="filterCategory" class="form-control" style="flex: 1;">
+                        <option value="all">All Categories</option>
+                        <option value="academic">Academic</option>
+                        <option value="administrative">Administrative</option>
+                        <option value="faculty">Faculty Related</option>
+                        <option value="facilities">Facilities</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="queriesList">
+                <!-- Queries will be dynamically inserted here -->
+            </div>
+            
+            <div id="queryPagination" style="margin-top: 20px; display: flex; justify-content: center;">
+                <!-- Pagination will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Response Modal (hidden by default) -->
+    <div id="responseModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: white; margin: 5% auto; padding: 20px; width: 80%; max-width: 700px; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 id="modalQueryTitle">Respond to Query</h3>
+                <span class="close-modal" style="cursor: pointer; font-size: 24px;">&times;</span>
+            </div>
+            <div id="modalQueryDetails" style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
+                <!-- Query details will be inserted here -->
+            </div>
+            <form id="responseForm">
+                <input type="hidden" id="currentQueryId">
+                <div class="form-group">
+                    <label for="responseText">Your Response</label>
+                    <textarea id="responseText" class="form-control" rows="4" placeholder="Enter your response here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="responseStatus">Update Status</label>
+                    <select id="responseStatus" class="form-control">
+                        <option value="open">Open</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Response</button>
+                <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+                <!-- Gallery Tab -->
+                <div id="gallery" class="tab-content">
+                    <h2>Gallery</h2>
+                    <p>View and manage the institute's gallery.</p>
+                
+                    <div class="gallery-grid" id="gallery-grid">
+                      <!-- Dynamically added gallery items will appear here -->
+                    </div>
+                
+                    <button class="btn btn-primary" onclick="openNewGalleryImageModal()">
+                      <i class="fas fa-plus"></i> Add New Image
+                    </button>
+                  </div>
+                
+                  <!-- Modal for adding a new image -->
+                  <div id="gallery-modal" class="modal">
+                    <div class="modal-content">
+                      <h3>Add New Image</h3>
+                      <input type="file" id="new-image" accept="image/*">
+                      <input type="text" id="new-caption" placeholder="Enter image caption">
+                      <button class="btn btn-primary" onclick="addNewImage()">Add Image</button>
+                      <button class="btn btn-primary" onclick="closeModal()">Cancel</button>
+                      
+
+                    </div>
+                  </div>
+
+                 <!-- Newsletters Tab -->
+<div id="newsletters" class="tab-content">
+    <h1 class="dashboard-heading">Newsletters</h1>
+    <p class="dashboard-subheading">Manage and distribute institute newsletters</p>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>Upload New Newsletter</h3>
+            <i class="fas fa-upload"></i>
+        </div>
+        <div class="card-body">
+            <form id="newsletterForm">
+                <div class="form-group">
+                    <label for="newsletterTitle">Title</label>
+                    <input type="text" id="newsletterTitle" class="form-control" placeholder="Enter newsletter title" required>
+                </div>
+                <div class="form-group">
+                    <label for="newsletterMonth">Month & Year</label>
+                    <input type="month" id="newsletterMonth" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="newsletterDescription">Description</label>
+                    <textarea id="newsletterDescription" class="form-control" placeholder="Brief description of newsletter content"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="newsletterFile">PDF File</label>
+                    <input type="file" id="newsletterFile" class="form-control" accept=".pdf" required>
+                    <small class="text-muted">Only PDF files are accepted (max 10MB)</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload Newsletter</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 25px;">
+        <div class="card-header">
+            <h3>Newsletter Archive</h3>
+            <i class="fas fa-archive"></i>
+        </div>
+        <div class="card-body">
+            <div class="search-container" style="margin-bottom: 20px;">
+                <div class="search-box">
+                    <input type="text" id="newsletterSearch" class="form-control search-input" placeholder="Search newsletters...">
+                    <button class="btn btn-primary" id="searchNewsletters">Search</button>
+                    <button class="btn btn-secondary" id="resetSearch">Reset</button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Month/Year</th>
+                            <th>Description</th>
+                            <th>Upload Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="newsletterTableBody">
+                        <!-- Newsletter items will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="newsletterPagination" style="margin-top: 20px; display: flex; justify-content: center;">
+                <!-- Pagination will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script>
+        // Tab Switching Function
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(menu-item[onclick="showTab('${tabId}')"]).classList.add('active');
+        }
+        //department
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample department data
+            const departments = [
+                { 
+                    name: 'Computer Science', 
+                    code: 'CSE',
+                    syllabus: [
+                        { course: 'Data Structures', coverage: 85 },
+                        { course: 'Algorithms', coverage: 78 },
+                        { course: 'Database Systems', coverage: 92 },
+                        { course: 'Operating Systems', coverage: 80 }
+                    ],
+                    achievements: [
+                        { title: 'Hackathon Win', description: 'Team won national hackathon', date: '2024-03-15' },
+                        { title: 'Research Grant', description: 'Received $50,000 grant for AI research', date: '2024-02-10' }
+                    ],
+                    faculty: [
+                        { name: 'Dr. Sarah Johnson', score: 88.6, rating: 'Excellent' },
+                        { name: 'Prof. Michael Chen', score: 82.3, rating: 'Good' },
+                        { name: 'Dr. Emily Wilson', score: 91.2, rating: 'Outstanding' }
+                    ],
+                    studentStats: {
+                        averageGPA: 8.2,
+                        passRate: 92,
+                        placementRate: 88,
+                        attendance: 89
+                    }
+                },
+                { 
+                    name: 'Electronics', 
+                    code: 'ECE',
+                    syllabus: [
+                        { course: 'Digital Electronics', coverage: 90 },
+                        { course: 'Microprocessors', coverage: 85 },
+                        { course: 'VLSI Design', coverage: 75 }
+                    ],
+                    achievements: [
+                        { title: 'Innovation Award', description: 'Won award for innovative project', date: '2024-04-05' }
+                    ],
+                    faculty: [
+                        { name: 'Dr. Robert Smith', score: 85.4, rating: 'Good' },
+                        { name: 'Prof. Lisa Wong', score: 89.1, rating: 'Excellent' }
+                    ],
+                    studentStats: {
+                        averageGPA: 8.5,
+                        passRate: 94,
+                        placementRate: 85,
+                        attendance: 91
+                    }
+                }
+            ];
+        
+            // Initialize department metrics
+            renderSyllabusCoverage();
+            renderAchievements();
+            renderFacultyPerformance();
+            renderStudentPerformance();
+            
+            // Set up department tab switching
+            function showDepartmentTab(tabId) {
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                document.querySelectorAll('.tabs .tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                document.getElementById(tabId).classList.add('active');
+                document.querySelector(`.tab[onclick="showDepartmentTab('${tabId}')"]`).classList.add('active');
+            }
+            
+            window.showDepartmentTab = showDepartmentTab;
+        
+            // Render syllabus coverage table
+            function renderSyllabusCoverage() {
+                const tableBody = document.getElementById('syllabusTableBody');
+                tableBody.innerHTML = '';
+                
+                departments.forEach(dept => {
+                    dept.syllabus.forEach(course => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${dept.name} (${dept.code})</td>
+                            <td>${course.coverage}</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: ${course.coverage}%"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" onclick="viewSyllabusDetails('${dept.code}', '${course.course}')">
+                                    Details
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+            }
+        
+            // Render achievements list
+            function renderAchievements() {
+                const achievementsList = document.getElementById('achievementsList');
+                achievementsList.innerHTML = '';
+                
+                departments.forEach(dept => {
+                    if (dept.achievements.length > 0) {
+                        const deptHeader = document.createElement('h4');
+                        deptHeader.textContent = `${dept.name} (${dept.code})`;
+                        deptHeader.style.margin = '15px 0 10px 0';
+                        deptHeader.style.color = 'var(--dark-color)';
+                        achievementsList.appendChild(deptHeader);
+                        
+                        dept.achievements.forEach(achievement => {
+                            const achievementItem = document.createElement('div');
+                            achievementItem.className = 'list-item';
+                            achievementItem.innerHTML = `
+                                <div>
+                                    <strong>${achievement.title}</strong>
+                                    <div>${achievement.description}</div>
+                                </div>
+                                <span class="date-label">${formatDate(achievement.date)}</span>
+                            `;
+                            achievementsList.appendChild(achievementItem);
+                        });
+                    }
+                });
+            }
+        
+            // Render faculty performance
+            function renderFacultyPerformance() {
+                const facultyTableBody = document.getElementById('facultyTableBody');
+                facultyTableBody.innerHTML = '';
+                
+                departments.forEach(dept => {
+                    dept.faculty.forEach(faculty => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${faculty.name}</td>
+                            <td>${dept.name} (${dept.code})</td>
+                            <td>${faculty.score}</td>
+                            <td>
+                                <span class="badge ${
+                                    faculty.score > 90 ? 'badge-success' : 
+                                    faculty.score > 80 ? 'badge-secondary' : 'badge-warning'
+                                }">${faculty.rating}</span>
+                            </td>
+                        `;
+                        facultyTableBody.appendChild(row);
+                    });
+                });
+                
+                // Faculty performance chart
+                const ctx = document.getElementById('facultyPerformanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: departments.map(dept => dept.name),
+                        datasets: [{
+                            label: 'Average Faculty Score',
+                            data: departments.map(dept => 
+                                dept.faculty.reduce((sum, faculty) => sum + faculty.score, 0) / dept.faculty.length
+                            ),
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 70,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+        
+            // Render student performance
+            function renderStudentPerformance() {
+                const metricsContainer = document.querySelector('#student-performance .department-metrics');
+                metricsContainer.innerHTML = '';
+                
+                departments.forEach(dept => {
+                    const metricCard = document.createElement('div');
+                    metricCard.className = 'metric-item';
+                    metricCard.innerHTML = `
+                        <h4>${dept.name} (${dept.code})</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                            <div>
+                                <small>Average GPA</small>
+                                <p>${dept.studentStats.averageGPA}</p>
+                            </div>
+                            <div>
+                                <small>Pass Rate</small>
+                                <p>${dept.studentStats.passRate}%</p>
+                            </div>
+                            <div>
+                                <small>Placement Rate</small>
+                                <p>${dept.studentStats.placementRate}%</p>
+                            </div>
+                            <div>
+                                <small>Attendance</small>
+                                <p>${dept.studentStats.attendance}%</p>
+                            </div>
+                        </div>
+                    `;
+                    metricsContainer.appendChild(metricCard);
+                });
+                
+                // Student performance chart
+                const ctx = document.getElementById('studentPerformanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Average GPA', 'Pass Rate', 'Placement Rate', 'Attendance'],
+                        datasets: departments.map(dept => ({
+                            label: dept.name,
+                            data: [
+                                dept.studentStats.averageGPA,
+                                dept.studentStats.passRate,
+                                dept.studentStats.placementRate,
+                                dept.studentStats.attendance
+                            ],
+                            backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`,
+                            borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                            borderWidth: 1
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: true
+                                },
+                                suggestedMin: 70,
+                                suggestedMax: 100
+                            }
+                        }
+                    }
+                });
+            }
+        
+            // Helper functions
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            }
+        });
+        
+        // Global functions for department metrics
+        function viewSyllabusDetails(deptCode, course) {
+            alert(`Viewing syllabus details for ${course} in department ${deptCode}`);
+        }
+        
+
+      
+        //COE
+            // Array to store exam data
+            let exams = [
+                {
+                    name: "Semester 1 Exams",
+                    date: "2024-12-01",
+                    department: "All Departments",
+                    status: "Scheduled"
+                },
+                {
+                    name: "Mid-Term Exams",
+                    date: "2024-11-10",
+                    department: "Computer Science",
+                    status: "Completed"
+                }
+            ];
+        
+            // Function to populate the exam table
+            function populateExamTable() {
+                const tableBody = document.getElementById('exam-schedule-table-body');
+                tableBody.innerHTML = ""; // Clear existing table rows
+        
+                exams.forEach((exam, index) => {
+                    const row = document.createElement('tr');
+        
+                    // Exam Name
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = exam.name;
+                    row.appendChild(nameCell);
+        
+                    // Exam Date
+                    const dateCell = document.createElement('td');
+                    dateCell.textContent = exam.date;
+                    row.appendChild(dateCell);
+        
+                    // Department
+                    const departmentCell = document.createElement('td');
+                    departmentCell.textContent = exam.department;
+                    row.appendChild(departmentCell);
+        
+                    // Status
+                    const statusCell = document.createElement('td');
+                    const statusBadge = document.createElement('span');
+                    statusBadge.classList.add('badge');
+        
+                    if (exam.status === "Scheduled") {
+                        statusBadge.classList.add('badge-pending');
+                    } else if (exam.status === "Completed") {
+                        statusBadge.classList.add('badge-success');
+                    }
+                    statusBadge.textContent = exam.status;
+                    statusCell.appendChild(statusBadge);
+                    row.appendChild(statusCell);
+        
+                    // Actions (Edit/Change Status)
+                    const actionsCell = document.createElement('td');
+                    const changeStatusButton = document.createElement('button');
+                    changeStatusButton.classList.add('btn', 'btn-sm', 'btn-warning');
+                    changeStatusButton.textContent = exam.status === "Scheduled" ? "Mark as Completed" : "Mark as Scheduled";
+                    changeStatusButton.onclick = () => changeExamStatus(index);
+                    actionsCell.appendChild(changeStatusButton);
+                    row.appendChild(actionsCell);
+        
+                    tableBody.appendChild(row);
+                });
+            }
+        
+            // Function to change the status of an exam
+            function changeExamStatus(index) {
+                const exam = exams[index];
+                if (exam.status === "Scheduled") {
+                    exam.status = "Completed";
+                } else {
+                    exam.status = "Scheduled";
+                }
+                populateExamTable(); // Re-render the table with updated status
+            }
+        
+            // Function to open the "Add Exam" form
+            function openAddExamForm() {
+                document.getElementById('add-exam-form').style.display = 'block';
+            }
+        
+            // Function to close the "Add Exam" form
+            function closeAddExamForm() {
+                document.getElementById('add-exam-form').style.display = 'none';
+            }
+        
+            // Function to handle the form submission (Add new exam)
+            document.getElementById('exam-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+        
+                const examName = document.getElementById('exam-name').value;
+                const examDate = document.getElementById('exam-date').value;
+                const examDepartment = document.getElementById('exam-department').value;
+        
+                // Add the new exam to the exams array
+                exams.push({
+                    name: examName,
+                    date: examDate,
+                    department: examDepartment,
+                    status: "Scheduled"
+                });
+        
+                // Reset the form and close it
+                document.getElementById('exam-form').reset();
+                closeAddExamForm();
+                
+                // Re-render the table with the new exam
+                populateExamTable();
+            });
+        
+            // Initialize the table when the page loads
+            window.onload = populateExamTable;
+        
+        //institute
+            // Sample research project data (this can be fetched from a database or an API)
+            const researchProjects = [
+                {
+                    title: "AI for Healthcare",
+                    department: "Computer Science",
+                    funding: "$50,000",
+                    status: "Ongoing"
+                },
+                {
+                    title: "Renewable Energy Systems",
+                    department: "Mechanical Engineering",
+                    funding: "$75,000",
+                    status: "Completed"
+                },
+                {
+                    title: "Quantum Computing Advancements",
+                    department: "Physics",
+                    funding: "$100,000",
+                    status: "Ongoing"
+                },
+                {
+                    title: "Smart Agriculture with IoT",
+                    department: "Electrical Engineering",
+                    funding: "$60,000",
+                    status: "Completed"
+                }
+            ];
+        
+            // Function to dynamically populate the research projects table
+            function populateResearchProjects() {
+                const tableBody = document.getElementById('research-projects-body');
+                tableBody.innerHTML = ""; // Clear any existing rows
+        
+                researchProjects.forEach(project => {
+                    const row = document.createElement('tr');
+        
+                    // Create and append cells for each project property
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = project.title;
+                    row.appendChild(titleCell);
+        
+                    const departmentCell = document.createElement('td');
+                    departmentCell.textContent = project.department;
+                    row.appendChild(departmentCell);
+        
+                    const fundingCell = document.createElement('td');
+                    fundingCell.textContent = project.funding;
+                    row.appendChild(fundingCell);
+        
+                    const statusCell = document.createElement('td');
+                    const statusBadge = document.createElement('span');
+                    statusBadge.classList.add('badge');
+        
+                    // Apply different badge classes based on status
+                    if (project.status === "Ongoing") {
+                        statusBadge.classList.add('badge-in-progress');
+                    } else if (project.status === "Completed") {
+                        statusBadge.classList.add('badge-success');
+                    }
+                    statusBadge.textContent = project.status;
+                    statusCell.appendChild(statusBadge);
+                    row.appendChild(statusCell);
+        
+                    // Append the row to the table body
+                    tableBody.appendChild(row);
+                });
+            }
+        
+            // Call the function to populate the table when the page is ready
+            window.onload = populateResearchProjects;
+        
+        
+    
+        // Student Search Management
+document.addEventListener('DOMContentLoaded', function() {
+    // Sample student data (in a real app, this would come from a database)
+    let students = [
+        {
+            id: 'PES2024001',
+            firstName: 'Rahul',
+            lastName: 'Sharma',
+            dob: '2002-05-15',
+            gender: 'Male',
+            email: 'rahul.sharma@pes.edu',
+            phone: '9876543210',
+            address: '123, MG Road, Bangalore',
+            department: 'computer-science',
+            year: '3',
+            admissionDate: '2022-07-01',
+            cgpa: '8.7',
+            creditsCompleted: '98',
+            status: 'active',
+            avatar: null,
+            documents: [
+                { name: 'Admission Letter', type: 'pdf', date: '2022-06-20' },
+                { name: 'ID Card', type: 'image', date: '2022-07-05' },
+                { name: 'Fee Receipt', type: 'pdf', date: '2024-06-15' }
+            ],
+            attendance: {
+                overall: 85,
+                currentSemester: 92,
+                subjects: [
+                    { name: 'Data Structures', code: 'CS301', held: 45, attended: 42 },
+                    { name: 'Algorithms', code: 'CS302', held: 40, attended: 38 },
+                    { name: 'Database Systems', code: 'CS303', held: 42, attended: 39 },
+                    { name: 'Operating Systems', code: 'CS304', held: 38, attended: 35 },
+                    { name: 'Computer Networks', code: 'CS305', held: 36, attended: 34 }
+                ]
+            },
+            results: [
+                { semester: 'Semester 1', sgpa: '8.2', credits: '24', backlogs: '0', rank: '15' },
+                { semester: 'Semester 2', sgpa: '8.5', credits: '26', backlogs: '0', rank: '12' },
+                { semester: 'Semester 3', sgpa: '8.9', credits: '24', backlogs: '0', rank: '8' },
+                { semester: 'Semester 4', sgpa: '8.7', credits: '24', backlogs: '0', rank: '10' }
+            ]
+        },
+        {
+            id: 'PES2024002',
+            firstName: 'Priya',
+            lastName: 'Patel',
+            dob: '2003-02-20',
+            gender: 'Female',
+            email: 'priya.patel@pes.edu',
+            phone: '8765432109',
+            address: '456, Brigade Road, Bangalore',
+            department: 'electronics',
+            year: '2',
+            admissionDate: '2023-07-01',
+            cgpa: '9.1',
+            creditsCompleted: '52',
+            status: 'active',
+            avatar: null,
+            documents: [
+                { name: 'Admission Letter', type: 'pdf', date: '2023-06-18' },
+                { name: 'ID Card', type: 'image', date: '2023-07-03' }
+            ],
+            attendance: {
+                overall: 92,
+                currentSemester: 95,
+                subjects: [
+                    { name: 'Digital Electronics', code: 'EC201', held: 40, attended: 39 },
+                    { name: 'Signals & Systems', code: 'EC202', held: 42, attended: 41 },
+                    { name: 'Microprocessors', code: 'EC203', held: 38, attended: 37 },
+                    { name: 'Control Systems', code: 'EC204', held: 36, attended: 35 }
+                ]
+            },
+            results: [
+                { semester: 'Semester 1', sgpa: '9.0', credits: '24', backlogs: '0', rank: '5' },
+                { semester: 'Semester 2', sgpa: '9.2', credits: '28', backlogs: '0', rank: '3' }
+            ]
+        },
+        // Add more sample students as needed
+    ];
+
+    // DOM elements
+    const studentSearchInput = document.getElementById('studentSearchInput');
+    const searchStudentsBtn = document.getElementById('searchStudents');
+    const filterDepartment = document.getElementById('filterDepartment');
+    const filterYear = document.getElementById('filterYear');
+    const filterStatus = document.getElementById('filterStatus');
+    const studentTableBody = document.getElementById('studentTableBody');
+    const paginationContainer = document.getElementById('studentPagination');
+    const studentModal = document.getElementById('studentModal');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+    const printProfileBtn = document.getElementById('printStudentProfile');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const tabs = document.querySelectorAll('.tab[data-tab]');
+
+    // Configuration
+    const itemsPerPage = 10;
+    let currentPage = 1;
+    let filteredStudents = [...students];
+
+    // Initialize
+    renderStudentTable();
+    setupPagination();
+
+    // Search functionality
+    searchStudentsBtn.addEventListener('click', function() {
+        applyFilters();
+    });
+
+    // Search when pressing Enter in search input
+    studentSearchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            applyFilters();
+        }
+    });
+
+    // Filter functionality
+    [filterDepartment, filterYear, filterStatus].forEach(filter => {
+        filter.addEventListener('change', function() {
+            applyFilters();
+        });
+    });
+
+    function applyFilters() {
+        const searchTerm = studentSearchInput.value.toLowerCase();
+        const departmentFilter = filterDepartment.value;
+        const yearFilter = filterYear.value;
+        const statusFilter = filterStatus.value;
+        
+        filteredStudents = students.filter(student => {
+            const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+            const matchesSearch = searchTerm === '' || 
+                fullName.includes(searchTerm) || 
+                student.id.toLowerCase().includes(searchTerm) ||
+                student.department.toLowerCase().includes(searchTerm);
+            
+            const matchesDepartment = departmentFilter === '' || student.department === departmentFilter;
+            const matchesYear = yearFilter === '' || student.year === yearFilter;
+            const matchesStatus = statusFilter === '' || student.status === statusFilter;
+            
+            return matchesSearch && matchesDepartment && matchesYear && matchesStatus;
+        });
+        
+        currentPage = 1;
+        renderStudentTable();
+        setupPagination();
+    }
+
+    // Render student table
+    function renderStudentTable() {
+        studentTableBody.innerHTML = '';
+        
+        if (filteredStudents.length === 0) {
+            studentTableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center;">No students found matching your criteria</td>
+                </tr>
+            `;
+            return;
+        }
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredStudents.length);
+        const currentItems = filteredStudents.slice(startIndex, endIndex);
+        
+        currentItems.forEach(student => {
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td class="student-name-cell">
+                    <div class="student-avatar">
+                        ${student.avatar ? 
+                            `<img src="${student.avatar}" alt="${student.firstName}">` : 
+                            `<i class="fas fa-user-graduate"></i>`}
+                    </div>
+                    ${student.firstName} ${student.lastName}
+                </td>
+                <td><span class="dept-badge dept-${getDeptClass(student.department)}">${formatDepartment(student.department)}</span></td>
+                <td>Year ${student.year}</td>
+                <td>${student.cgpa}</td>
+                <td><span class="status-badge status-${student.status}">${formatStatus(student.status)}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="viewStudentDetails('${student.id}')">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </td>
+            `;
+            
+            studentTableBody.appendChild(row);
+        });
+    }
+
+    // Setup pagination
+    function setupPagination() {
+        paginationContainer.innerHTML = '';
+        
+        const pageCount = Math.ceil(filteredStudents.length / itemsPerPage);
+        if (pageCount <= 1) return;
+        
+        const paginationList = document.createElement('ul');
+        paginationList.className = 'pagination';
+        
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.innerHTML = `<a href="#" ${currentPage === 1 ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>&laquo;</a>`;
+        prevLi.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                renderStudentTable();
+                setupPagination();
+            }
+        });
+        paginationList.appendChild(prevLi);
+        
+        // Page numbers
+        for (let i = 1; i <= pageCount; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.innerHTML = `<a href="#" ${i === currentPage ? 'class="active"' : ''}>${i}</a>`;
+            pageLi.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = i;
+                renderStudentTable();
+                setupPagination();
+            });
+            paginationList.appendChild(pageLi);
+        }
+        
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.innerHTML = `<a href="#" ${currentPage === pageCount ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>&raquo;</a>`;
+        nextLi.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage < pageCount) {
+                currentPage++;
+                renderStudentTable();
+                setupPagination();
+            }
+        });
+        paginationList.appendChild(nextLi);
+        
+        paginationContainer.appendChild(paginationList);
+    }
+
+    // Tab switching in modal
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding pane
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            document.getElementById(`${tabId}Tab`).classList.add('active');
+        });
+    });
+
+    // Modal handling
+    function openStudentModal(studentId) {
+        const student = students.find(s => s.id === studentId);
+        if (!student) return;
+        
+        // Set basic info
+        document.getElementById('modalStudentName').textContent = `${student.firstName} ${student.lastName}`;
+        document.getElementById('studentIdBadge').textContent = student.id;
+        document.getElementById('studentStatusBadge').className = `badge status-${student.status}`;
+        document.getElementById('studentStatusBadge').textContent = formatStatus(student.status);
+        
+        // Set avatar
+        const avatarContainer = document.getElementById('studentAvatar');
+        avatarContainer.innerHTML = student.avatar ? 
+            `<img src="${student.avatar}" alt="${student.firstName} ${student.lastName}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+            `<i class="fas fa-user-graduate" style="font-size: 50px; color: #666;"></i>`;
+        
+        // Personal tab
+        document.getElementById('studentFullName').textContent = `${student.firstName} ${student.lastName}`;
+        document.getElementById('studentDob').textContent = formatDate(student.dob);
+        document.getElementById('studentGender').textContent = student.gender;
+        document.getElementById('studentEmail').textContent = student.email;
+        document.getElementById('studentPhone').textContent = student.phone;
+        document.getElementById('studentAddress').textContent = student.address;
+        
+        // Academic tab
+        document.getElementById('studentDept').textContent = formatDepartment(student.department);
+        document.getElementById('studentYear').textContent = `Year ${student.year}`;
+        document.getElementById('studentAdmissionDate').textContent = formatDate(student.admissionDate);
+        document.getElementById('studentCgpa').textContent = student.cgpa;
+        document.getElementById('studentCredits').textContent = student.creditsCompleted;
+        
+        // Results table
+        const resultsTable = document.getElementById('studentResultsTable');
+        resultsTable.innerHTML = '';
+        student.results.forEach(result => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${result.semester}</td>
+                <td>${result.sgpa}</td>
+                <td>${result.credits}</td>
+                <td>${result.backlogs}</td>
+                <td>${result.rank}</td>
+            `;
+            resultsTable.appendChild(row);
+        });
+        
+        // Attendance tab
+        document.getElementById('attendanceOverall').textContent = `${student.attendance.overall}%`;
+        document.getElementById('attendanceProgress').style.width = `${student.attendance.overall}%`;
+        document.getElementById('attendanceCurrent').textContent = `${student.attendance.currentSemester}%`;
+        document.getElementById('currentAttendanceProgress').style.width = `${student.attendance.currentSemester}%`;
+        
+        const attendanceTable = document.getElementById('subjectAttendanceTable');
+        attendanceTable.innerHTML = '';
+        student.attendance.subjects.forEach(subject => {
+            const percentage = Math.round((subject.attended / subject.held) * 100);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${subject.name}</td>
+                <td>${subject.code}</td>
+                <td>${subject.held}</td>
+                <td>${subject.attended}</td>
+                <td>
+                    ${percentage}%
+                    <div class="progress-container" style="margin-top: 5px;">
+                        <div class="progress-bar" style="width: ${percentage}%"></div>
+                    </div>
+                </td>
+            `;
+            attendanceTable.appendChild(row);
+        });
+        
+        // Documents tab
+        const documentsContainer = document.getElementById('documentsTab');
+        documentsContainer.innerHTML = '';
+        
+        if (student.documents && student.documents.length > 0) {
+            student.documents.forEach(doc => {
+                const docCard = document.createElement('div');
+                docCard.className = 'document-card';
+                
+                const iconClass = doc.type === 'pdf' ? 'fa-file-pdf' : 
+                                 doc.type === 'image' ? 'fa-file-image' : 'fa-file';
+                
+                docCard.innerHTML = `
+                    <div class="document-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div class="document-name">${doc.name}</div>
+                    <small class="text-muted">${formatDate(doc.date)}</small>
+                    <div class="document-actions">
+                        <button class="btn btn-sm btn-primary">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                `;
+                
+                documentsContainer.appendChild(docCard);
+            });
+        } else {
+            documentsContainer.innerHTML = '<p>No documents available for this student.</p>';
+        }
+        
+        // Show modal
+        studentModal.style.display = 'block';
+    }
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            studentModal.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === studentModal) {
+            studentModal.style.display = 'none';
+        }
+    });
+
+    // Print profile
+    printProfileBtn.addEventListener('click', function() {
+        alert('In a real app, this would print the student profile');
+        // window.print(); // You could use this for actual printing
+    });
+
+    // Helper functions
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+    function formatStatus(status) {
+        const statusMap = {
+            'active': 'Active',
+            'inactive': 'Inactive',
+            'graduated': 'Graduated',
+            'suspended': 'Suspended'
+        };
+        return statusMap[status] || status;
+    }
+
+    function formatDepartment(department) {
+        const deptMap = {
+            'computer-science': 'Computer Science',
+            'mechanical': 'Mechanical Engineering',
+            'electrical': 'Electrical Engineering',
+            'civil': 'Civil Engineering',
+            'electronics': 'Electronics & Communication'
+        };
+        return deptMap[department] || department;
+    }
+
+    function getDeptClass(department) {
+        const deptClassMap = {
+            'computer-science': 'cs',
+            'mechanical': 'mech',
+            'electrical': 'electrical',
+            'civil': 'civil',
+            'electronics': 'ec'
+        };
+        return deptClassMap[department] || 'other';
+    }
+});
+
+// Global function to view student details
+function viewStudentDetails(studentId) {
+    const event = new Event('openStudentModal');
+    event.studentId = studentId;
+    document.dispatchEvent(event);
+}
+
+// Listen for the event to open student modal
+document.addEventListener('openStudentModal', function(e) {
+    // Find the studentModal and related functions in your implementation
+    // This is a placeholder - in your actual code, you would call your modal opening function
+    console.log(`Opening details for student: ${e.studentId}`);
+    // openStudentModal(e.studentId);
+});
+
+
+        //rule book
+        
+            // Function to add a new policy
+            function addPolicy() {
+                const policyName = document.getElementById('policy-name').value;
+                const policyLink = document.getElementById('policy-link').value;
+        
+                if (policyName && policyLink) {
+                    // Create a new list item
+                    const newPolicy = document.createElement('div');
+                    newPolicy.classList.add('list-item');
+        
+                    // Set up the HTML for the new policy document
+                    newPolicy.innerHTML = `
+                        <span>${policyName}</span>
+                        <a href="${policyLink}" class="btn btn-sm btn-primary" download>Download</a>
+                        <button class="btn btn-sm btn-danger" onclick="removePolicy(this)">Remove</button>
+                    `;
+        
+                    // Append the new policy to the list of policies
+                    const policiesContainer = document.querySelector('.card-body');
+                    policiesContainer.appendChild(newPolicy);
+        
+                    // Clear input fields after adding the policy
+                    document.getElementById('policy-name').value = '';
+                    document.getElementById('policy-link').value = '';
+                } else {
+                    alert('Please provide both a policy name and a download link.');
+                }
+            }
+        
+            // Function to remove a policy
+            function removePolicy(button) {
+                // Get the parent div of the button (which is the policy item)
+                const policyItem = button.parentElement;
+                policyItem.remove();
+            }
+        
+        
+        //circulars and notices
+        
+            // Toggle the description of the circulars (expand/collapse)
+            function toggleDescription(index) {
+                const details = document.querySelectorAll('.circular-description')[index];
+                details.style.display = details.style.display === 'none' ? 'block' : 'none';
+            }
+        
+            // Confirm when the "View" button is clicked
+            function confirmView(circularTitle) {
+                const confirmMessage = `Are you sure you want to view the "${circularTitle}" notice?`;
+                return confirm(confirmMessage);
+            }
+        
+            // Add a new circular dynamically
+            function addCircular() {
+                const date = document.getElementById('new-date').value;
+                const title = document.getElementById('new-title').value;
+        
+                if (date && title) {
+                    const newCircular = document.createElement('div');
+                    newCircular.classList.add('list-item');
+        
+                    newCircular.innerHTML = `
+                        <span class="date-label">${date}</span>
+                        <span>${title}</span>
+                        <a href="#" class="btn btn-sm btn-primary" onclick="return confirmView('${title}')">View</a>
+                    `;
+        
+                    // Append the new circular to the list
+                    const circularsContainer = document.querySelector('.card-body');
+                    circularsContainer.appendChild(newCircular);
+        
+                    // Clear input fields after adding
+                    document.getElementById('new-date').value = '';
+                    document.getElementById('new-title').value = '';
+                } else {
+                    alert('Please enter both a date and title.');
+                }
+            }
+        
+        
+        //quries and support
+        // Queries & Support Management
+document.addEventListener('DOMContentLoaded', function() {
+    // Sample query data (in a real app, this would come from a database)
+    let queries = [
+        {
+            id: '1',
+            title: 'Exam Schedule Clarification',
+            category: 'academic',
+            priority: 'medium',
+            status: 'open',
+            description: 'Student has requested clarification on the exam schedule for Semester 3. Specifically about the timing of the practical exams.',
+            date: '2024-10-22T14:30:00',
+            submittedBy: 'Student (ID: S2024001)',
+            attachment: null,
+            responses: []
+        },
+        {
+            id: '2',
+            title: 'Faculty Leave Approval',
+            category: 'faculty',
+            priority: 'high',
+            status: 'in-progress',
+            description: 'Faculty member has requested leave for next week due to a conference attendance.',
+            date: '2024-10-21T10:15:00',
+            submittedBy: 'Dr. Smith (CS Department)',
+            attachment: { name: 'conference_invitation.pdf', size: '1.2MB' },
+            responses: [
+                {
+                    id: 'r1',
+                    text: 'I have forwarded this request to the HR department for processing.',
+                    date: '2024-10-21T16:45:00',
+                    respondedBy: 'Principal Office',
+                    statusUpdate: 'in-progress'
+                }
+            ]
+        },
+        {
+            id: '3',
+            title: 'Classroom AC Repair',
+            category: 'facilities',
+            priority: 'urgent',
+            status: 'open',
+            description: 'The air conditioning in classroom B-203 is not working properly. It makes loud noises and doesn\'t cool effectively.',
+            date: '2024-10-23T09:20:00',
+            submittedBy: 'Prof. Johnson',
+            attachment: { name: 'ac_issue_video.mp4', size: '3.5MB' },
+            responses: []
+        }
+    ];
+
+    // DOM elements
+    const queryForm = document.getElementById('queryForm');
+    const queriesList = document.getElementById('queriesList');
+    const querySearch = document.getElementById('querySearch');
+    const searchQueriesBtn = document.getElementById('searchQueries');
+    const filterStatus = document.getElementById('filterStatus');
+    const filterPriority = document.getElementById('filterPriority');
+    const filterCategory = document.getElementById('filterCategory');
+    const paginationContainer = document.getElementById('queryPagination');
+    const responseModal = document.getElementById('responseModal');
+    const responseForm = document.getElementById('responseForm');
+    const modalQueryTitle = document.getElementById('modalQueryTitle');
+    const modalQueryDetails = document.getElementById('modalQueryDetails');
+    const currentQueryId = document.getElementById('currentQueryId');
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+
+    // Configuration
+    const itemsPerPage = 5;
+    let currentPage = 1;
+    let filteredQueries = [...queries];
+
+    // Initialize
+    renderQueriesList();
+    setupQueryPagination();
+
+    // Form submission for new query
+    queryForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('queryTitle').value;
+        const category = document.getElementById('queryCategory').value;
+        const priority = document.getElementById('queryPriority').value;
+        const description = document.getElementById('queryDescription').value;
+        const attachment = document.getElementById('queryAttachment').files[0];
+        
+        if (!title || !category || !priority || !description) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        // In a real app, you would upload the attachment to a server here
+        let attachmentInfo = null;
+        if (attachment) {
+            if (attachment.size > 5 * 1024 * 1024) { // 5MB limit
+                alert('Attachment size exceeds 5MB limit');
+                return;
+            }
+            attachmentInfo = {
+                name: attachment.name,
+                size: formatFileSize(attachment.size)
+            };
+        }
+        
+        const newQuery = {
+            id: Date.now().toString(),
+            title,
+            category,
+            priority,
+            status: 'open',
+            description,
+            date: new Date().toISOString(),
+            submittedBy: 'Current User', // In real app, get from auth system
+            attachment: attachmentInfo,
+            responses: []
+        };
+        
+        queries.unshift(newQuery); // Add to beginning of array
+        filteredQueries = [...queries];
+        currentPage = 1;
+        
+        renderQueriesList();
+        setupQueryPagination();
+        queryForm.reset();
+        
+        alert('Query submitted successfully!');
+    });
+
+    // Search functionality
+    searchQueriesBtn.addEventListener('click', function() {
+        const searchTerm = querySearch.value.toLowerCase();
+        if (searchTerm.trim() === '') {
+            filteredQueries = [...queries];
+        } else {
+            filteredQueries = queries.filter(query => 
+                query.title.toLowerCase().includes(searchTerm) ||
+                query.description.toLowerCase().includes(searchTerm) ||
+                query.submittedBy.toLowerCase().includes(searchTerm)
+            );
+        }
+        currentPage = 1;
+        renderQueriesList();
+        setupQueryPagination();
+    });
+
+    // Filter functionality
+    [filterStatus, filterPriority, filterCategory].forEach(filter => {
+        filter.addEventListener('change', function() {
+            applyFilters();
+        });
+    });
+
+    function applyFilters() {
+        const statusFilter = filterStatus.value;
+        const priorityFilter = filterPriority.value;
+        const categoryFilter = filterCategory.value;
+        
+        filteredQueries = queries.filter(query => {
+            return (statusFilter === 'all' || query.status === statusFilter) &&
+                   (priorityFilter === 'all' || query.priority === priorityFilter) &&
+                   (categoryFilter === 'all' || query.category === categoryFilter);
+        });
+        
+        currentPage = 1;
+        renderQueriesList();
+        setupQueryPagination();
+    }
+
+    // Modal handling
+    function openModal(queryId) {
+        const query = queries.find(q => q.id === queryId);
+        if (!query) return;
+        
+        currentQueryId.value = queryId;
+        modalQueryTitle.textContent = `Respond to: ${query.title}`;
+        
+        let detailsHtml = `
+            <div><strong>Submitted by:</strong> ${query.submittedBy}</div>
+            <div><strong>Date:</strong> ${formatDateTime(query.date)}</div>
+            <div><strong>Category:</strong> <span class="query-category category-${query.category}">${formatCategory(query.category)}</span></div>
+            <div><strong>Priority:</strong> <span class="query-priority priority-${query.priority}">${formatPriority(query.priority)}</span></div>
+            <div><strong>Status:</strong> <span class="query-status status-${query.status}">${formatStatus(query.status)}</span></div>
+            <div style="margin-top: 10px;"><strong>Description:</strong></div>
+            <div>${query.description}</div>
+        `;
+        
+        if (query.attachment) {
+            detailsHtml += `
+                <div class="query-attachment">
+                    <i class="fas fa-paperclip"></i>
+                    <span>${query.attachment.name} (${query.attachment.size})</span>
+                </div>
+            `;
+        }
+        
+        if (query.responses && query.responses.length > 0) {
+            detailsHtml += `<div style="margin-top: 15px;"><strong>Previous Responses:</strong></div>`;
+            query.responses.forEach(response => {
+                detailsHtml += `
+                    <div class="query-response">
+                        <div class="response-meta">
+                            ${response.respondedBy} on ${formatDateTime(response.date)}
+                            ${response.statusUpdate ? `(Status updated to ${formatStatus(response.statusUpdate)})` : ''}
+                        </div>
+                        <div>${response.text}</div>
+                    </div>
+                `;
+            });
+        }
+        
+        modalQueryDetails.innerHTML = detailsHtml;
+        document.getElementById('responseStatus').value = query.status;
+        responseModal.style.display = 'block';
+    }
+
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            responseModal.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === responseModal) {
+            responseModal.style.display = 'none';
+        }
+    });
+
+    // Response form submission
+    responseForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const queryId = currentQueryId.value;
+        const responseText = document.getElementById('responseText').value;
+        const statusUpdate = document.getElementById('responseStatus').value;
+        
+        if (!responseText) {
+            alert('Please enter your response');
+            return;
+        }
+        
+        const queryIndex = queries.findIndex(q => q.id === queryId);
+        if (queryIndex === -1) return;
+        
+        const newResponse = {
+            id: Date.now().toString(),
+            text: responseText,
+            date: new Date().toISOString(),
+            respondedBy: 'Principal Office', // In real app, get from auth system
+            statusUpdate: statusUpdate !== queries[queryIndex].status ? statusUpdate : null
+        };
+        
+        queries[queryIndex].responses.push(newResponse);
+        queries[queryIndex].status = statusUpdate;
+        
+        // Update the filtered queries array
+        const filteredIndex = filteredQueries.findIndex(q => q.id === queryId);
+        if (filteredIndex !== -1) {
+            filteredQueries[filteredIndex] = queries[queryIndex];
+        }
+        
+        renderQueriesList();
+        responseForm.reset();
+        responseModal.style.display = 'none';
+        
+        alert('Response submitted successfully!');
+    });
+
+    // Render queries list
+    function renderQueriesList() {
+        queriesList.innerHTML = '';
+        
+        if (filteredQueries.length === 0) {
+            queriesList.innerHTML = '<div class="query-item" style="text-align: center;">No queries found matching your criteria</div>';
+            return;
+        }
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredQueries.length);
+        const currentItems = filteredQueries.slice(startIndex, endIndex);
+        
+        currentItems.forEach(query => {
+            const queryElement = document.createElement('div');
+            queryElement.className = 'query-item';
+            
+            let attachmentHtml = '';
+            if (query.attachment) {
+                attachmentHtml = `
+                    <div class="query-attachment">
+                        <i class="fas fa-paperclip"></i>
+                        <span>${query.attachment.name} (${query.attachment.size})</span>
+                    </div>
+                `;
+            }
+            
+            let responsesHtml = '';
+            if (query.responses && query.responses.length > 0) {
+                responsesHtml = `
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--secondary-color);">
+                        <i class="fas fa-reply"></i> ${query.responses.length} response${query.responses.length !== 1 ? 's' : ''}
+                    </div>
+                `;
+            }
+            
+            queryElement.innerHTML = `
+                <div class="query-header">
+                    <div>
+                        <span class="query-title">${query.title}</span>
+                        <span class="query-category category-${query.category}">${formatCategory(query.category)}</span>
+                        <span class="query-priority priority-${query.priority}">${formatPriority(query.priority)}</span>
+                    </div>
+                    <div class="query-date">${formatDateTime(query.date)}</div>
+                </div>
+                <div class="query-body">
+                    <div><strong>Submitted by:</strong> ${query.submittedBy}</div>
+                    <div style="margin-top: 5px;">${query.description}</div>
+                    ${attachmentHtml}
+                    ${responsesHtml}
+                </div>
+                <div class="query-footer">
+                    <span class="query-status status-${query.status}">${formatStatus(query.status)}</span>
+                    <div class="action-buttons">
+                        <button class="btn btn-sm btn-primary" onclick="openModal('${query.id}')">
+                            <i class="fas fa-reply"></i> Respond
+                        </button>
+                        ${query.status !== 'closed' ? `
+                        <button class="btn btn-sm btn-success" onclick="changeQueryStatus('${query.id}', 'closed')">
+                            <i class="fas fa-check"></i> Close
+                        </button>
+                        ` : ''}
+                        <button class="btn btn-sm btn-danger" onclick="deleteQuery('${query.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            queriesList.appendChild(queryElement);
+        });
+    }
+
+    // Setup pagination
+    function setupQueryPagination() {
+        queryPagination.innerHTML = '';
+        
+        const pageCount = Math.ceil(filteredQueries.length / itemsPerPage);
+        if (pageCount <= 1) return;
+        
+        const paginationList = document.createElement('ul');
+        paginationList.className = 'pagination';
+        
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.innerHTML = `<a href="#" ${currentPage === 1 ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>&laquo;</a>`;
+        prevLi.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                renderQueriesList();
+                setupQueryPagination();
+            }
+        });
+        paginationList.appendChild(prevLi);
+        
+        // Page numbers
+        for (let i = 1; i <= pageCount; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.innerHTML = `<a href="#" ${i === currentPage ? 'class="active"' : ''}>${i}</a>`;
+            pageLi.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = i;
+                renderQueriesList();
+                setupQueryPagination();
+            });
+            paginationList.appendChild(pageLi);
+        }
+        
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.innerHTML = `<a href="#" ${currentPage === pageCount ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>&raquo;</a>`;
+        nextLi.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage < pageCount) {
+                currentPage++;
+                renderQueriesList();
+                setupQueryPagination();
+            }
+        });
+        paginationList.appendChild(nextLi);
+        
+        queryPagination.appendChild(paginationList);
+    }
+
+    // Helper functions
+    function formatDateTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function formatStatus(status) {
+        const statusMap = {
+            'open': 'Open',
+            'in-progress': 'In Progress',
+            'resolved': 'Resolved',
+            'closed': 'Closed'
+        };
+        return statusMap[status] || status;
+    }
+
+    function formatPriority(priority) {
+        const priorityMap = {
+            'low': 'Low',
+            'medium': 'Medium',
+            'high': 'High',
+            'urgent': 'Urgent'
+        };
+        return priorityMap[priority] || priority;
+    }
+
+    function formatCategory(category) {
+        const categoryMap = {
+            'academic': 'Academic',
+            'administrative': 'Administrative',
+            'faculty': 'Faculty Related',
+            'facilities': 'Facilities',
+            'other': 'Other'
+        };
+        return categoryMap[category] || category;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat(bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+    }
+});
+
+// Query actions (these would be connected to backend in a real app)
+function openModal(queryId) {
+    // This is already handled in the main function, but we expose it globally
+    const event = new Event('openModal');
+    event.queryId = queryId;
+    document.dispatchEvent(event);
+}
+
+function changeQueryStatus(queryId, newStatus) {
+    if (confirm('Are you sure you want to change the status of this query?')) {
+        alert(`Changing status of query ${queryId} to ${newStatus}\nIn a real app, this would update the database`);
+        // You would typically refresh the list after status change
+    }
+}
+
+function deleteQuery(queryId) {
+    if (confirm('Are you sure you want to delete this query? This action cannot be undone.')) {
+        alert(`Deleting query with ID: ${queryId}\nIn a real app, this would remove it from the database`);
+        // You would typically refresh the list after deletion
+    }
+}
+        //gallery
+        let galleryItems = [];
+
+        function renderGallery() {
+          const grid = document.getElementById('gallery-grid');
+          grid.innerHTML = '';
+          galleryItems.forEach((item, index) => {
+            const el = document.createElement('div');
+            el.className = 'gallery-item';
+            el.innerHTML = `
+              <img src="${item.src}" alt="Image ${index + 1}">
+              <div class="caption">${item.caption}</div>
+            `;
+            grid.appendChild(el);
+          });
+        }
+      
+        function openNewGalleryImageModal() {
+          document.getElementById('gallery-modal').style.display = 'flex';
+        }
+      
+        function closeModal() {
+          document.getElementById('gallery-modal').style.display = 'none';
+          document.getElementById('new-image').value = '';
+          document.getElementById('new-caption').value = '';
+        }
+      
+        function addNewImage() {
+          const fileInput = document.getElementById('new-image');
+          const caption = document.getElementById('new-caption').value.trim();
+          const file = fileInput.files[0];
+      
+          if (!file || !caption) {
+            alert("Please select an image and enter a caption.");
+            return;
+          }
+      
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            galleryItems.push({ src: e.target.result, caption });
+            renderGallery();
+            closeModal();
+          };
+          reader.readAsDataURL(file);
+        }
+      
+        // ✅ Attach Cancel button event
+        document.addEventListener('DOMContentLoaded', function () {
+          document.getElementById('cancel-button').addEventListener('click', closeModal);
+        });
+        //newsletters
+        // Newsletter Management
+document.addEventListener('DOMContentLoaded', function() {
+    // Sample newsletter data (in a real app, this would come from a database)
+    let newsletters = [
+        {
+            id: '1',
+            title: 'Monthly Newsletter',
+            month: '2024-10',
+            description: 'Highlights from October 2024 including events and achievements',
+            uploadDate: '2024-10-25',
+            fileName: 'october-2024-newsletter.pdf',
+            fileSize: '2.4 MB'
+        },
+        {
+            id: '2',
+            title: 'Monthly Newsletter',
+            month: '2024-09',
+            description: 'September 2024 updates and upcoming events',
+            uploadDate: '2024-09-28',
+            fileName: 'september-2024-newsletter.pdf',
+            fileSize: '1.8 MB'
+        }
+    ];
+
+    // DOM elements
+    const newsletterForm = document.getElementById('newsletterForm');
+    const newsletterTableBody = document.getElementById('newsletterTableBody');
+    const newsletterSearch = document.getElementById('newsletterSearch');
+    const searchNewslettersBtn = document.getElementById('searchNewsletters');
+    const resetSearchBtn = document.getElementById('resetSearch');
+    const paginationContainer = document.getElementById('newsletterPagination');
+
+    // Configuration
+    const itemsPerPage = 5;
+    let currentPage = 1;
+    let filteredNewsletters = [...newsletters];
+
+    // Initialize
+    renderNewsletterTable();
+    setupPagination();
+
+    // Form submission
+    newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('newsletterTitle').value;
+        const month = document.getElementById('newsletterMonth').value;
+        const description = document.getElementById('newsletterDescription').value;
+        const fileInput = document.getElementById('newsletterFile');
+        
+        if (!title || !month || !fileInput.files[0]) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        if (fileInput.files[0].size > 10 * 1024 * 1024) { // 10MB limit
+            alert('File size exceeds 10MB limit');
+            return;
+        }
+        
+        if (fileInput.files[0].type !== 'application/pdf') {
+            alert('Only PDF files are allowed');
+            return;
+        }
+        
+        // In a real app, you would upload the file to a server here
+        // For this demo, we'll just add it to our local array
+        const newNewsletter = {
+            id: Date.now().toString(),
+            title,
+            month,
+            description,
+            uploadDate: new Date().toISOString().split('T')[0],
+            fileName: fileInput.files[0].name,
+            fileSize: formatFileSize(fileInput.files[0].size)
+        };
+        
+        newsletters.unshift(newNewsletter); // Add to beginning of array
+        filteredNewsletters = [...newsletters];
+        currentPage = 1;
+        
+        renderNewsletterTable();
+        setupPagination();
+        newsletterForm.reset();
+        
+        alert('Newsletter uploaded successfully!');
+    });
+
+    // Search functionality
+    searchNewslettersBtn.addEventListener('click', function() {
+        const searchTerm = newsletterSearch.value.toLowerCase();
+        if (searchTerm.trim() === '') {
+            filteredNewsletters = [...newsletters];
+        } else {
+            filteredNewsletters = newsletters.filter(newsletter => 
+                newsletter.title.toLowerCase().includes(searchTerm) ||
+                newsletter.description.toLowerCase().includes(searchTerm) ||
+                newsletter.month.toLowerCase().includes(searchTerm)
+            );
+        }
+        currentPage = 1;
+        renderNewsletterTable();
+        setupPagination();
+    });
+
+    // Reset search
+    resetSearchBtn.addEventListener('click', function() {
+        newsletterSearch.value = '';
+        filteredNewsletters = [...newsletters];
+        currentPage = 1;
+        renderNewsletterTable();
+        setupPagination();
+    });
+
+    // Render newsletter table
+    function renderNewsletterTable() {
+        newsletterTableBody.innerHTML = '';
+        
+        if (filteredNewsletters.length === 0) {
+            newsletterTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center;">No newsletters found</td>
+                </tr>
+            `;
+            return;
+        }
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredNewsletters.length);
+        const currentItems = filteredNewsletters.slice(startIndex, endIndex);
+        
+        currentItems.forEach(newsletter => {
+            const row = document.createElement('tr');
+            
+            const monthYear = formatMonthYear(newsletter.month);
+            
+            row.innerHTML = `
+                <td>
+                    <div style="display: flex; align-items: center;">
+                        <div class="newsletter-thumbnail">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div style="margin-left: 10px;">
+                            <strong>${newsletter.title}</strong><br>
+                            <small>${newsletter.fileName}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>${monthYear}</td>
+                <td>${newsletter.description || 'No description'}</td>
+                <td>${formatDate(newsletter.uploadDate)}</td>
+                <td>
+                    <div class="newsletter-actions">
+                        <button class="btn btn-sm btn-primary" onclick="downloadNewsletter('${newsletter.id}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="previewNewsletter('${newsletter.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteNewsletter('${newsletter.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            newsletterTableBody.appendChild(row);
+        });
+    }
+
+    // Setup pagination
+    function setupPagination() {
+        paginationContainer.innerHTML = '';
+        
+        const pageCount = Math.ceil(filteredNewsletters.length / itemsPerPage);
+        if (pageCount <= 1) return;
+        
+        const paginationList = document.createElement('ul');
+        paginationList.className = 'pagination';
+        
+        // Previous button
+        const prevLi = document.createElement('li');
+        prevLi.innerHTML = `<a href="#" ${currentPage === 1 ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>&laquo;</a>`;
+        prevLi.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                renderNewsletterTable();
+                setupPagination();
+            }
+        });
+        paginationList.appendChild(prevLi);
+        
+        // Page numbers
+        for (let i = 1; i <= pageCount; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.innerHTML = `<a href="#" ${i === currentPage ? 'class="active"' : ''}>${i}</a>`;
+            pageLi.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = i;
+                renderNewsletterTable();
+                setupPagination();
+            });
+            paginationList.appendChild(pageLi);
+        }
+        
+        // Next button
+        const nextLi = document.createElement('li');
+        nextLi.innerHTML = `<a href="#" ${currentPage === pageCount ? 'style="pointer-events: none; opacity: 0.5;"' : ''}>&raquo;</a>`;
+        nextLi.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage < pageCount) {
+                currentPage++;
+                renderNewsletterTable();
+                setupPagination();
+            }
+        });
+        paginationList.appendChild(nextLi);
+        
+        paginationContainer.appendChild(paginationList);
+    }
+
+    // Helper functions
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
+    function formatMonthYear(monthString) {
+        const [year, month] = monthString.split('-');
+        const date = new Date(year, month - 1);
+        return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat(bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+    }
+});
+
+// Newsletter actions (these would be connected to backend in a real app)
+function downloadNewsletter(id) {
+    alert(`Downloading newsletter with ID: ${id}\nIn a real app, this would download the file`);
+}
+
+function previewNewsletter(id) {
+    alert(`Previewing newsletter with ID: ${id}\nIn a real app, this would show a preview`);
+}
+
+function deleteNewsletter(id) {
+    if (confirm('Are you sure you want to delete this newsletter?')) {
+        alert(`Deleting newsletter with ID: ${id}\nIn a real app, this would remove it from the database`);
+        // You would typically refresh the table after deletion
+    }
+}
+        //events
+        // Add this to your existing script section
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize calendar
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        editable: true,
+        selectable: true,
+        initialDate: new Date(), // Show current month by default
+        nowIndicator: true,
+        dayMaxEvents: true,
+        events: [
+            {
+                id: '1',
+                title: 'Tech Fest 2024',
+                start: '2024-11-01T10:00:00',
+                end: '2024-11-03T16:00:00',
+                color: '#3498db',
+                description: 'Annual technical festival with competitions and workshops'
+            },
+            {
+                id: '2',
+                title: 'Annual Cultural Day',
+                start: '2024-11-15T09:00:00',
+                end: '2024-11-15T17:00:00',
+                color: '#e74c3c',
+                description: 'Cultural performances and competitions'
+            }
+        ],
+        dateClick: function(info) {
+            // Set default times when clicking on a date
+            document.getElementById('eventStart').value = info.dateStr + 'T10:00';
+            document.getElementById('eventEnd').value = info.dateStr + 'T16:00';
+            document.getElementById('eventTitle').focus();
+        },
+        eventClick: function(info) {
+            const event = info.event;
+            if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
+                event.remove();
+                updateEventsList();
+            }
+        }
+    });
+    
+    calendar.render();
+
+    // Event form handling
+    const eventForm = document.getElementById('eventForm');
+    const clearForm = document.getElementById('clearForm');
+    
+    eventForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('eventTitle').value;
+        const start = document.getElementById('eventStart').value;
+        const end = document.getElementById('eventEnd').value;
+        const description = document.getElementById('eventDescription').value;
+        const color = document.getElementById('eventColor').value;
+        
+        if (!title || !start || !end) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        calendar.addEvent({
+            title,
+            start,
+            end,
+            description,
+            color,
+            allDay: false
+        });
+        
+        eventForm.reset();
+        updateEventsList();
+    });
+    
+    clearForm.addEventListener('click', function() {
+        eventForm.reset();
+    });
+    
+    // Update events list
+    function updateEventsList() {
+        const events = calendar.getEvents();
+        const eventsList = document.getElementById('eventsList');
+        eventsList.innerHTML = '';
+        
+        if (events.length === 0) {
+            eventsList.innerHTML = '<p>No upcoming events</p>';
+            return;
+        }
+        
+        // Sort events by start date
+        events.sort((a, b) => a.start - b.start);
+        
+        events.forEach(event => {
+            const eventItem = document.createElement('div');
+            eventItem.className = 'list-item';
+            
+            const startDate = event.start ? event.start.toLocaleString() : 'N/A';
+            const endDate = event.end ? event.end.toLocaleString() : 'N/A';
+            
+            eventItem.innerHTML = `
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <div style="width: 12px; height: 12px; background-color: ${event.backgroundColor || event.borderColor || '#3498db'}; margin-right: 8px; border-radius: 2px;"></div>
+                        <strong>${event.title}</strong>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">
+                        <i class="far fa-clock" style="margin-right: 5px;"></i>
+                        ${startDate} to ${endDate}
+                    </div>
+                    ${event.extendedProps.description ? `<p style="font-size: 0.9rem; color: #555; margin-top: 5px;">${event.extendedProps.description}</p>` : ''}
+                </div>
+                <button class="btn btn-sm btn-danger" data-event-id="${event.id}" style="align-self: center;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            
+            eventsList.appendChild(eventItem);
+        });
+        
+        // Add event listeners to delete buttons
+        document.querySelectorAll('#eventsList .btn-danger').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const eventId = this.getAttribute('data-event-id');
+                const event = calendar.getEventById(eventId);
+                if (event && confirm(`Delete "${event.title}"?`)) {
+                    event.remove();
+                    updateEventsList();
+                }
+            });
+        });
+    }
+    
+    // Initial update of events list
+    updateEventsList();
+});
+
+        
+        //special announcements
+        // Wait for the DOM to fully load before running the script
+document.addEventListener("DOMContentLoaded", function() {
+
+    // Handle the form submission to publish an announcement
+    const form = document.querySelector('.announcement-form');
+    const publishBtn = form.querySelector('button[type="submit"]');
+    const saveDraftBtn = form.querySelector('button[type="button"]');
+
+    // Handle the form submission (Publish Announcement)
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('announcement-title').value;
+        const content = document.getElementById('announcement-content').value;
+        const date = document.getElementById('announcement-date').value;
+
+        // Simple validation
+        if (!title || !content || !date) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        // Logic to publish the announcement (for example, sending it to a server)
+        console.log('Publishing Announcement:', { title, content, date });
+
+        // Reset the form after publishing
+        form.reset();
+        alert('Announcement Published!');
+    });
+
+    // Handle saving as draft (Save as Draft button)
+    saveDraftBtn.addEventListener('click', function() {
+        const title = document.getElementById('announcement-title').value;
+        const content = document.getElementById('announcement-content').value;
+        const date = document.getElementById('announcement-date').value;
+
+        // Simple validation for drafts
+        if (!title || !content || !date) {
+            alert('Please fill in all fields before saving as draft.');
+            return;
+        }
+
+        // Logic to save the draft (for example, storing in local storage or sending to server)
+        console.log('Saving as Draft:', { title, content, date });
+
+        // Reset the form after saving the draft
+        form.reset();
+        alert('Announcement Saved as Draft!');
+    });
+
+    // Handle Edit and Delete buttons for the announcement history
+    const actionButtons = document.querySelectorAll('.action-buttons');
+
+    actionButtons.forEach(function(actionBtnContainer) {
+        const editBtn = actionBtnContainer.querySelector('.btn-primary');
+        const deleteBtn = actionBtnContainer.querySelector('.btn-danger');
+
+        // Handle Edit button click
+        editBtn.addEventListener('click', function() {
+            const row = actionBtnContainer.closest('tr');
+            const title = row.querySelector('td:nth-child(1)').innerText;
+            const date = row.querySelector('td:nth-child(2)').innerText;
+
+            // Logic to handle editing (you can pre-fill form or redirect to an edit page)
+            console.log(`Editing Announcement: ${title} scheduled for ${date}`);
+            alert(`Editing Announcement: ${title}`);
+        });
+
+        // Handle Delete button click
+        deleteBtn.addEventListener('click', function() {
+            const row = actionBtnContainer.closest('tr');
+            const title = row.querySelector('td:nth-child(1)').innerText;
+
+            // Logic to handle deletion (ask for confirmation and then delete)
+            const confirmDelete = confirm(`Are you sure you want to delete the announcement: ${title}?`);
+            if (confirmDelete) {
+                // Remove the row from the table (assuming you're handling the data deletion in the backend too)
+                row.remove();
+                alert(`Announcement "${title}" deleted.`);
+            }
+        });
+    });
+
+});
+
+
+        // Logout Function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        }
+
+        // Mobile Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        document.querySelector('.mobile-toggle')?.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Institute Performance Chart
+        const ctx = document.getElementById('instituteChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Student Performance',
+                    data: [85, 88, 90, 92, 91, 93],
+                    borderColor: 'var(--primary-color)',
+                    fill: false,
+                    tension: 0.1
+                }, {
+                    label: 'Placement Rate',
+                    data: [80, 82, 85, 88, 90, 92],
+                    borderColor: 'var(--secondary-color)',
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2, // Adjust aspect ratio for better fit
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        max: 100,
+                        ticks: {
+                            stepSize: 5
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 6
+                        }
+                    }
+                }
+            }
+        });
+        function logout() {
+    window.location.href = "login.html"; // Adjust path if your login file is in a folder
+  }
+
+    </script>
+</body>
+</html>
